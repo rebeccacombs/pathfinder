@@ -389,7 +389,7 @@ export default class PathfindingVisualizer extends Component {
       <div>
         <div className="text-center text-3xl mt-2 mb-1 font-medium">
             Path-Finding Visualizer</div>
-            <div className=" italic text-center mb-1 text-slate-600">Drag the <span className="text-green-600">start node</span> and <span className="text-red-600">end node</span> to move them around.</div>
+            <div className=" italic text-center mb-1 text-slate-500">Click and drag <span className="text-green-600">start node</span> and <span className="text-red-600">end node</span> to move them.<span className="text-black bold"> Draw walls</span> on empty grid.</div>
 
         <table
           className="grid-container mx-auto bg-gray-100 border border-4 border-gray-600 flex-nowrap"
