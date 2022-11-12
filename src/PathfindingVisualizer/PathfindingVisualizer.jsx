@@ -3,6 +3,97 @@ import Node from './Node/Node';
 import {dfs} from '../algorithms/dfs';
 import {bfs} from '../algorithms/bfs';
 
+var BFSbuttonStop; 
+var DFSbuttonStop; 
+window.onload = function() {
+  var BFSseconds = { agent: "00"}; 
+  var BFStens = { agent: "00"};  
+  var BFSappendTens = document.getElementById("BFStens")
+  var BFSappendSeconds = document.getElementById("BFSseconds")
+  var BFSbuttonStart = document.getElementById('bfs');
+  BFSbuttonStop = document.getElementById('BFSstopBtn')
+  var BFSInterval;
+
+  var DFSseconds = { agent: "00"}; 
+  var DFStens = { agent: "00"};  
+  var DFSappendTens = document.getElementById("DFStens")
+  var DFSappendSeconds = document.getElementById("DFSseconds")
+  var DFSbuttonStart = document.getElementById('dfs');
+  DFSbuttonStop = document.getElementById('DFSstopBtn')
+  var DFSInterval;
+
+  BFSbuttonStart.onclick = function() {
+    clearInterval(BFSInterval);
+     BFStens = "00";
+  	 BFSseconds = "00";
+     BFSappendTens.innerHTML = BFStens;
+  	 BFSappendSeconds.innerHTML = BFSseconds;
+     BFSInterval = setInterval(BFSstartTimer, 10);
+  }
+
+  DFSbuttonStart.onclick = function() {
+    clearInterval(DFSInterval);
+     DFStens = "00";
+  	 DFSseconds = "00";
+     DFSappendTens.innerHTML = DFStens;
+  	 DFSappendSeconds.innerHTML = DFSseconds;
+     DFSInterval = setInterval(DFSstartTimer, 10);
+  }
+    
+  BFSbuttonStop.onclick = function() {
+       clearInterval(BFSInterval);
+  }
+
+  DFSbuttonStop.onclick = function() {
+    clearInterval(DFSInterval);
+}
+
+  function BFSstartTimer () {
+    BFStens++;  
+    if(BFStens <= 9){
+      BFSappendTens.innerHTML = "0" + BFStens;
+    }
+    
+    if (BFStens > 9){
+      BFSappendTens.innerHTML = BFStens;  
+    } 
+    
+    if (BFStens > 99){
+      console.log("BFSseconds");
+      BFSseconds++;
+      BFSappendSeconds.innerHTML = "0" + BFSseconds;
+      BFStens = 0;
+      BFSappendTens.innerHTML = "0" + 0;
+    }
+    
+    if (BFSseconds > 9){
+      BFSappendSeconds.innerHTML = BFSseconds;
+    }
+  }
+
+  function DFSstartTimer () {
+    DFStens++;  
+    if(DFStens <= 9){
+      DFSappendTens.innerHTML = "0" + DFStens;
+    }
+    
+    if (DFStens > 9){
+      DFSappendTens.innerHTML = DFStens;  
+    } 
+    
+    if (DFStens > 99){
+      console.log("DFSseconds");
+      DFSseconds++;
+      DFSappendSeconds.innerHTML = "0" + DFSseconds;
+      DFStens = 0;
+      DFSappendTens.innerHTML = "0" + 0;
+    }
+    
+    if (DFSseconds > 9){
+      DFSappendSeconds.innerHTML = DFSseconds;
+    }
+  }
+}
 
 export default class PathfindingVisualizer extends Component {
   constructor() {
@@ -24,19 +115,19 @@ export default class PathfindingVisualizer extends Component {
       isWallNode: false, // xxxxxxx
       currRow: 0,
       currCol: 0,
-      isDesktopView: true,
+      isDesktopView: true
     };
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.toggleIsRunning = this.toggleIsRunning.bind(this);
   }
-
+  
   componentDidMount() {
     const grid = this.getInitialGrid();
     this.setState({grid});
   }
-
+  
   toggleIsRunning() {
     this.setState({isRunning: !this.state.isRunning});
   }
@@ -71,7 +162,7 @@ export default class PathfindingVisualizer extends Component {
       }
     }
   }
-
+  
   /******************** Set up the initial grid ********************/
   getInitialGrid = (
     rowCount = this.state.ROW_COUNT,
@@ -318,11 +409,11 @@ export default class PathfindingVisualizer extends Component {
         grid[this.state.FINISH_NODE_ROW][this.state.FINISH_NODE_COL];
       let visitedNodesInOrder;
       switch (algo) {
-        case 'BFS':
-          visitedNodesInOrder = bfs(grid, startNode, finishNode);
-          break;
         case 'DFS':
           visitedNodesInOrder = dfs(grid, startNode, finishNode);
+          break;
+        case 'BFS':
+          visitedNodesInOrder = bfs(grid, startNode, finishNode);
           break;
         default:
           // should never get here
@@ -330,15 +421,19 @@ export default class PathfindingVisualizer extends Component {
       }
       const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
       nodesInShortestPathOrder.push('end');
-      this.animate(visitedNodesInOrder, nodesInShortestPathOrder);
+      this.animate(visitedNodesInOrder, nodesInShortestPathOrder, algo);
     }
   }
 
-  animate(visitedNodesInOrder, nodesInShortestPathOrder) {
+  animate(visitedNodesInOrder, nodesInShortestPathOrder, algo) {
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
-          this.animateShortestPath(nodesInShortestPathOrder);
+          if(algo === "BFS"){
+            this.BFSanimateShortestPath(nodesInShortestPathOrder);
+          } else{
+            this.DFSanimateShortestPath(nodesInShortestPathOrder);
+          } 
         }, 10 * i);
         return;
       }
@@ -355,13 +450,39 @@ export default class PathfindingVisualizer extends Component {
             'node node-visited';
         }
       }, 10 * i);
-    }
+    } 
   }
 
   /******************** Create path from start to finish ********************/
-  animateShortestPath(nodesInShortestPathOrder) {
+  BFSanimateShortestPath(nodesInShortestPathOrder) {
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
       if (nodesInShortestPathOrder[i] === 'end') {
+        BFSbuttonStop.click();
+        setTimeout(() => {
+          this.toggleIsRunning();
+        }, i * 50);
+      } else {
+        setTimeout(() => {
+          const node = nodesInShortestPathOrder[i];
+          const nodeClassName = document.getElementById(
+            `node-${node.row}-${node.col}`,
+          ).className;
+          if (
+            nodeClassName !== 'node node-start' &&
+            nodeClassName !== 'node node-finish'
+          ) {
+            document.getElementById(`node-${node.row}-${node.col}`).className =
+              'node node-shortest-path';
+          }
+        }, i * 40);
+      }
+    }
+  }
+
+  DFSanimateShortestPath(nodesInShortestPathOrder) {
+    for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+      if (nodesInShortestPathOrder[i] === 'end') {
+        DFSbuttonStop.click();
         setTimeout(() => {
           this.toggleIsRunning();
         }, i * 50);
@@ -390,9 +511,10 @@ export default class PathfindingVisualizer extends Component {
         <div className="text-center text-3xl mt-2 mb-1 font-medium">
             Path-Finding Visualizer</div>
             <div className=" italic text-center mb-1 text-slate-500">Click and drag <span className="text-green-600">start node</span> and <span className="text-red-600">end node</span> to move them.<span className="text-black bold"> Draw walls</span> on empty grid.</div>
-
+           <div className="flex justify-center gap-14"> 
+           <div>
         <table
-          className="grid-container mx-auto bg-gray-100 border border-4 border-gray-600 flex-nowrap"
+          className=" grid-container mx-auto bg-gray-100 border border-4 border-gray-600 flex-nowrap"
           onMouseLeave={() => this.handleMouseLeave()}>
           <tbody className="">
             {grid.map((row, rowIdx) => {
@@ -435,16 +557,34 @@ export default class PathfindingVisualizer extends Component {
           Clear Walls
         </button>
         <button
-          className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+          className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" id="bfs"
           onClick={() => this.visualize('BFS')}>
           Breadth First Search
         </button>
         <button
-          className="bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 border-b-4 border-green-800 hover:border-green-600 rounded"
+          className="bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 border-b-4 border-green-800 hover:border-green-600 rounded" id="dfs"
           onClick={() => this.visualize('DFS')}>
           Depth First Search
         </button>
+        
       </div>
+      <button
+          id="BFSstopBtn">
+        </button>
+        <button
+          id="DFSstopBtn">
+        </button>
+      </div>
+      <div>
+        <p className="mt-2">BFS Timer(ms)</p>
+        <div className="mb-2 text-xl"><div><span id="BFSseconds">00</span>:<span id="BFStens">00</span>
+          </div></div>
+         <p>DFS Timer(ms)</p>
+         <div className="mb-2 text-xl"><div><span id="DFSseconds">00</span>:<span id="DFStens">00</span>
+          </div></div>
+        </div> 
+      </div>
+      
       </div>
     );
   }
