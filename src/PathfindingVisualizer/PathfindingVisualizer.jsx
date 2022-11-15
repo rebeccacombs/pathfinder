@@ -576,11 +576,11 @@ export default class PathfindingVisualizer extends Component {
         </button>
       </div>
       <div>
-        <p className="mt-2">BFS Timer(ms)</p>
-        <div className="mb-2 text-xl"><div><span id="BFSseconds">00</span>:<span id="BFStens">00</span>
+        <p className="mt-2 text-lg">BFS Timer(ms)</p>
+        <div className="mb-3 text-4xl"><div><span id="BFSseconds">00</span>:<span id="BFStens">00</span>
           </div></div>
-         <p>DFS Timer(ms)</p>
-         <div className="mb-2 text-xl"><div><span id="DFSseconds">00</span>:<span id="DFStens">00</span>
+         <p className="mt-2 text-lg">DFS Timer(ms)</p>
+         <div className="mb-2 text-4xl"><div><span id="DFSseconds">00</span>:<span id="DFStens">00</span>
           </div></div>
         </div> 
       </div>
