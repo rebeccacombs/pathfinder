@@ -8,11 +8,8 @@ export function dfs(grid, startNode, finishNode) {
     nextNodesStack.push(startNode);
     while (nextNodesStack.length) {
       const currentNode = nextNodesStack.pop();
-  
-      if (currentNode === finishNode) {
-        return visitedNodesInOrder;
-      }
-  
+      if (currentNode === finishNode) return visitedNodesInOrder;
+
       if (
         !currentNode.isWall &&
         (currentNode.isStart || !currentNode.isVisited)

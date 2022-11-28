@@ -3,6 +3,100 @@ import Node from './Node/Node';
 import {dfs} from '../algorithms/dfs';
 import {bfs} from '../algorithms/bfs';
 
+var BFSbuttonStop; 
+var DFSbuttonStop; 
+
+window.onload = function() {
+  var BFSseconds = { agent: "00"}; 
+  var BFStens = { agent: "00"};  
+  var BFSappendTens = document.getElementById("BFStens")
+  var BFSappendSeconds = document.getElementById("BFSseconds")
+  var BFSbuttonStart = document.getElementById('b_fs');
+  BFSbuttonStop = document.getElementById('BFSstopBtn')
+  var BFSInterval;
+
+  var DFSseconds = { agent: "00"}; 
+  var DFStens = { agent: "00"};  
+  var DFSappendTens = document.getElementById("DFStens")
+  var DFSappendSeconds = document.getElementById("DFSseconds")
+  var DFSbuttonStart = document.getElementById('dfs');
+  DFSbuttonStop = document.getElementById('DFSstopBtn')
+  var DFSInterval;
+
+  BFSbuttonStart.onclick = function() {
+    clearInterval(BFSInterval);
+     BFStens = "00";
+  	 BFSseconds = "00";
+     BFSappendTens.innerHTML = BFStens;
+  	 BFSappendSeconds.innerHTML = BFSseconds;
+     BFSInterval = setInterval(BFSstartTimer, 10);
+  }
+
+  DFSbuttonStart.onclick = function() {
+    clearInterval(DFSInterval);
+     DFStens = "00";
+  	 DFSseconds = "00";
+     DFSappendTens.innerHTML = DFStens;
+  	 DFSappendSeconds.innerHTML = DFSseconds;
+     DFSInterval = setInterval(DFSstartTimer, 10);
+  }
+    
+  BFSbuttonStop.onclick = function() {
+       clearInterval(BFSInterval);
+  }
+
+  DFSbuttonStop.onclick = function() {
+    clearInterval(DFSInterval);
+}
+
+  function BFSstartTimer () {
+    BFStens++;  
+    if(BFStens <= 9){
+      BFSappendTens.innerHTML = "0" + BFStens;
+    }
+    
+    if (BFStens > 9){
+      BFSappendTens.innerHTML = BFStens;  
+    } 
+    
+    if (BFStens > 99){
+      console.log("BFSseconds");
+      BFSseconds++;
+      BFSappendSeconds.innerHTML = "0" + BFSseconds;
+      BFStens = 0;
+      BFSappendTens.innerHTML = "0" + 0;
+    }
+    
+    if (BFSseconds > 9){
+      BFSappendSeconds.innerHTML = BFSseconds;
+    }
+  }
+
+  function DFSstartTimer () {
+    DFStens++;  
+    if(DFStens <= 9){
+      DFSappendTens.innerHTML = "0" + DFStens;
+    }
+    
+    if (DFStens > 9){
+      DFSappendTens.innerHTML = DFStens;  
+    } 
+    
+    if (DFStens > 99){
+      console.log("DFSseconds");
+      DFSseconds++;
+      DFSappendSeconds.innerHTML = "0" + DFSseconds;
+      DFStens = 0;
+      DFSappendTens.innerHTML = "0" + 0;
+    }
+    
+    if (DFSseconds > 9){
+      DFSappendSeconds.innerHTML = DFSseconds;
+    }
+  }
+}; 
+
+
 export default class PathfindingVisualizer extends Component {
   constructor() {
     super();
@@ -365,6 +459,7 @@ export default class PathfindingVisualizer extends Component {
   BFSanimateShortestPath(nodesInShortestPathOrder) {
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
       if (nodesInShortestPathOrder[i] === 'end') {
+        BFSbuttonStop.click();
         setTimeout(() => {
           this.toggleIsRunning();
         }, i * 50);
@@ -389,6 +484,7 @@ export default class PathfindingVisualizer extends Component {
   DFSanimateShortestPath(nodesInShortestPathOrder) {
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
       if (nodesInShortestPathOrder[i] === 'end') {
+        DFSbuttonStop.click();
         setTimeout(() => {
           this.toggleIsRunning();
         }, i * 50);
@@ -474,6 +570,20 @@ export default class PathfindingVisualizer extends Component {
         </button>
         
       </div>
+      <button
+          id="BFSstopBtn">
+        </button>
+        <button
+          id="DFSstopBtn">
+        </button>
+      </div>
+      <div>
+        <p className="mt-2 text-lg">BFS Timer(ms)</p>
+        <div className="mb-3 text-4xl"><div><span id="BFSseconds">00</span>:<span id="BFStens">00</span>
+          </div></div>
+         <p className="mt-2 text-lg">DFS Timer(ms)</p>
+         <div className="mb-2 text-4xl"><div><span id="DFSseconds">00</span>:<span id="DFStens">00</span>
+          </div></div>
         </div> 
       </div>
       
